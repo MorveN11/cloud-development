@@ -3,13 +3,13 @@ import { useAuth } from '@/contexts/auth.context';
 
 import { Navigate, Outlet, useLocation } from 'react-router';
 
-export function ProtectedLayout() {
+export function AuthLayout() {
   const { isAuthenticated } = useAuth();
 
   const location = useLocation();
 
-  if (!isAuthenticated) {
-    return <Navigate to="/login" state={{ from: location }} replace />;
+  if (isAuthenticated) {
+    return <Navigate to="/dashboard" state={{ from: location }} replace />;
   }
 
   return (

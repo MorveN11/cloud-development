@@ -127,7 +127,7 @@
   }
 
   h1 {
-    @apply font-serif text-2xl font-extrabold tracking-tight text-balance lg:text-3xl xl:text-4xl;
+    @apply font-serif text-2xl font-semibold tracking-tight text-balance lg:text-3xl xl:text-4xl;
   }
 
   h2 {
@@ -143,7 +143,7 @@
   }
 
   span {
-    @apply text-base font-medium lg:text-lg;
+    @apply text-sm font-medium lg:text-base;
   }
 
   p {
@@ -172,7 +172,7 @@
 }
 
 @utility link {
-  color: var(--color-secondary);
+  color: #1877f2;
   text-underline-offset: 4px;
   text-decoration: none;
 
@@ -202,5 +202,18 @@
     visibility: hidden;
     pointer-events: none;
     display: none;
+  }
+}
+
+@layer components {
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 }

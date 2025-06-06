@@ -2,7 +2,7 @@
 
 ## Descripción
 
-Aplicación React que permite el registro e inicio de sesión de usuarios utilizando Firebase Authentication. Soporta múltiples proveedores de autenticación (email/contraseña, Google y Facebook) y permite la vinculación de cuentas.
+Aplicación React que permite el registro e inicio de sesión de usuarios utilizando Firebase Authentication. Soporta múltiples proveedores de autenticación (email/contraseña, Google y Github) y permite la vinculación de cuentas.
 
 ## Configuración del Proyecto
 
@@ -19,7 +19,7 @@ Aplicación React que permite el registro e inicio de sesión de usuarios utiliz
 3. Habilita los métodos de autenticación deseados en la sección Authentication > Sign-in method
    - Email/Contraseña
    - Google
-   - Facebook
+   - Github
 4. Configura los dominios autorizados en Authentication > Settings
 5. Obtén tu configuración de Firebase y configúrala en el archivo `.env`
 
