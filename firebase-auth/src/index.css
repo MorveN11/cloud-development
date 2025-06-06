@@ -9,8 +9,8 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --font-sans: "Inter", sans-serif;
-  --font-serif: "League Spartan", sans-serif;
+  --font-sans: 'Inter', sans-serif;
+  --font-serif: 'League Spartan', sans-serif;
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -127,7 +127,7 @@
   }
 
   h1 {
-    @apply font-serif text-5xl font-extrabold tracking-tight text-balance lg:text-6xl xl:text-7xl;
+    @apply font-serif text-2xl font-extrabold tracking-tight text-balance lg:text-3xl xl:text-4xl;
   }
 
   h2 {
@@ -197,12 +197,10 @@
 }
 
 @utility hide-password-toggle {
-    ::-ms-reveal,
-    ::-ms-clear {
-        visibility: hidden;
-        pointer-events: none;
-        display: none;
-    }
+  ::-ms-reveal,
+  ::-ms-clear {
+    visibility: hidden;
+    pointer-events: none;
+    display: none;
+  }
 }
-
-
