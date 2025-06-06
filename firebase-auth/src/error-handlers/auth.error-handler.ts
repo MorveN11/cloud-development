@@ -19,7 +19,7 @@ export type AuthErrorCode = (typeof AuthErrorCode)[keyof typeof AuthErrorCode];
 const errorMessages: Record<AuthErrorCode, string> = {
   [AuthErrorCode.EMAIL_IN_USE]: 'The email address is already in use by another account.',
   [AuthErrorCode.INVALID_EMAIL]: 'The email address is invalid.',
-  [AuthErrorCode.INVALID_CREDENTIAL]: 'The email address is invalid.',
+  [AuthErrorCode.INVALID_CREDENTIAL]: 'The email or password is not correct.',
   [AuthErrorCode.ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL]:
     'An account already exists with the same email address but different sign-in credentials.',
   [AuthErrorCode.CREDENTIALS_ALREADY_IN_USE]: 'The credentials already in use.',

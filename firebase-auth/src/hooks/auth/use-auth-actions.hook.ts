@@ -1,6 +1,6 @@
 import { useAuth } from '@/contexts/auth.context';
 import type { AuthProviderType } from '@/providers/auth.providers';
-import type { LinkFormValues, LoginFormValues, RegisterFormValues } from '@/types/auth.types';
+import type { LinkPasswordFormValues, LoginFormValues, RegisterFormValues } from '@/types/auth.types';
 
 import { useNavigate } from 'react-router';
 import { toast } from 'sonner';
@@ -79,7 +79,7 @@ export const useAuthActions = () => {
     navigate('/dashboard');
   };
 
-  const handleLinkWithPassword = async (data: LinkFormValues) => {
+  const handleLinkWithPassword = async (data: LinkPasswordFormValues) => {
     const response = await linkWithPassword(data.email, data.password);
 
     if (!response.success) {
