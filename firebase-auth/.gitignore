@@ -8,6 +8,9 @@ dist-ssr
 *.local
 
 # Editor
-.vscode/*
-!.vscode/extensions.json
-*.sw?
+.vscode
+.idea
+
+# Environment Variables
+.env*
+!.env.example

@@ -3,7 +3,7 @@ import { HomePage } from '@/pages/home-page';
 
 import { Route, Routes } from 'react-router';
 
-export const RouterConfig = () => {
+export function RouterConfig() {
   return (
     <Routes>
       <Route element={<RootLayout />}>
@@ -11,4 +11,4 @@ export const RouterConfig = () => {
       </Route>
     </Routes>
   );
-};
+}

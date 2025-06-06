@@ -1,0 +1,22 @@
+import { z } from 'zod';
+
+const envSchema = z.object({
+  VITE_FIREBASE_API_KEY: z.string().min(1, 'Firebase API Key is required'),
+  VITE_FIREBASE_AUTH_DOMAIN: z.string().min(1, 'Firebase Auth Domain is required'),
+  VITE_FIREBASE_PROJECT_ID: z.string().min(1, 'Firebase Project ID is required'),
+  VITE_FIREBASE_STORAGE_BUCKET: z.string().min(1, 'Firebase Storage Bucket is required'),
+  VITE_FIREBASE_MESSAGING_SENDER_ID: z.string().min(1, 'Firebase Messaging Sender ID is required'),
+  VITE_FIREBASE_APP_ID: z.string().min(1, 'Firebase App ID is required'),
+  VITE_FIREBASE_MEASUREMENT_ID: z.string().min(1, 'Firebase Measurement ID is required'),
+});
+
+const _env = envSchema.safeParse(import.meta.env);
+
+if (!_env.success) {
+  console.error('❌ Invalid environment variables:', _env.error.format());
+  process.exit(1);
+}
+
+export const env = _env.data;
+
+export type Environment = z.infer<typeof envSchema>;

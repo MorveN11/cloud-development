@@ -1,6 +1,6 @@
 export function HomePage() {
   return (
-    <div>
+    <div className="custom-container">
       <h1>Home Page</h1>
     </div>
   );

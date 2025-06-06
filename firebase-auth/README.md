@@ -1,54 +1,85 @@
-# React + TypeScript + Vite
+# Aplicación de Autenticación con Firebase
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Descripción
 
-Currently, two official plugins are available:
+Aplicación React que permite el registro e inicio de sesión de usuarios utilizando Firebase Authentication. Soporta múltiples proveedores de autenticación (email/contraseña, Google y Facebook) y permite la vinculación de cuentas.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Configuración del Proyecto
 
-## Expanding the ESLint configuration
+### Requisitos Previos
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- Node.js (v18 o superior)
+- pnpm
+- Cuenta de Firebase
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+### Configuración de Firebase
+
+1. Crea un nuevo proyecto en la [Consola de Firebase](https://console.firebase.google.com/)
+2. Registra tu aplicación web en Firebase
+3. Habilita los métodos de autenticación deseados en la sección Authentication > Sign-in method
+   - Email/Contraseña
+   - Google
+   - Facebook
+4. Configura los dominios autorizados en Authentication > Settings
+5. Obtén tu configuración de Firebase y configúrala en el archivo `.env`
+
+### Variables de Entorno
+
+Crea un archivo `.env` en la raíz del proyecto con la siguiente información:
+
+```env
+VITE_FIREBASE_API_KEY=tu_api_key
+VITE_FIREBASE_AUTH_DOMAIN=tu_proyecto.firebaseapp.com
+VITE_FIREBASE_PROJECT_ID=tu_proyecto_id
+VITE_FIREBASE_STORAGE_BUCKET=tu_bucket.appspot.com
+VITE_FIREBASE_MESSAGING_SENDER_ID=tu_sender_id
+VITE_FIREBASE_APP_ID=tu_app_id
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Puedes revisar el archivo `.env.example` para ver un ejemplo de cómo debe verse el archivo `.env`.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Instalación
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+1. Clona el repositorio:
+
+   ```bash
+   git clone [url-del-repositorio]
+   cd firebase-auth
+   ```
+
+2. Instala las dependencias:
+
+   ```bash
+   npm install
+   # o
+   pnpm install
+   ```
+
+3. Inicia la aplicación en modo desarrollo:
+
+   ```bash
+   npm run dev
+   # o
+   pnpm dev
+   ```
+
+## Tecnologías Utilizadas
+
+- React 19
+- TypeScript
+- Firebase Authentication
+- React Router
+- Tailwind CSS
+- React Hook Form
+- React Hot Toast
+- Shadcn UI
+
+## Fecha de Entrega
+
+Lunes 09 de junio de 2025
+
+## Notas Adicionales
+
+- Asegúrate de configurar correctamente las reglas de seguridad de Firebase
+- No olvides configurar las URLs de redirección en la consola de Firebase
+- Mantén tus credenciales de Firebase seguras y no las expongas en el código fuente
