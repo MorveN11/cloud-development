@@ -1,5 +1,6 @@
 import { db } from '@/apps/firebase.app';
 import { CustomPostError, PostErrorCode, handlePostError } from '@/error-handlers/post.error-handler';
+import type { IImageService } from '@/interfaces/image/image-service.interface';
 import type { IPostRepository } from '@/interfaces/post/post-repository.interface';
 import { postSchema } from '@/schemas/post.schemas';
 import type { ApiResponse } from '@/types/api.types';
@@ -22,15 +23,28 @@ import {
 class PostRepository implements IPostRepository {
   private readonly collectionName = 'posts';
   private readonly postsCollection = collection(db, this.collectionName);
+  private readonly imageService: IImageService;
+
+  constructor(imageService: IImageService) {
+    this.imageService = imageService;
+  }
 
   public async create(authorUID: string, authorEmail: string, postData: CreatePostData): Promise<ApiResponse<Post>> {
     try {
+      const imageUploadResult = await this.imageService.uploadImage(postData.imageFile);
+
+      if (!imageUploadResult.success) {
+        return errorResponse(handlePostError(new CustomPostError(PostErrorCode.IMAGE_UPLOAD_FAILED)));
+      }
+
       const postDoc = doc(this.postsCollection);
 
       const postToCreate = postSchema.safeParse({
         id: postDoc.id,
         title: postData.title,
         content: postData.content,
+        imageName: imageUploadResult.data.name,
+        imageUrl: imageUploadResult.data.url,
         authorUID,
         authorEmail,
         createdAt: new Date(),
@@ -87,7 +101,20 @@ class PostRepository implements IPostRepository {
         return errorResponse(handlePostError(new CustomPostError(PostErrorCode.POST_NOT_FOUND)));
       }
 
+      const data = docSnap.data();
+
+      const post = postSchema.safeParse({
+        ...data,
+        createdAt: new Timestamp(data.createdAt.seconds, data.createdAt.nanoseconds).toDate(),
+      });
+
+      if (!post.success) {
+        return errorResponse(handlePostError(new CustomPostError(PostErrorCode.DOCUMENT_PARSE_ERROR)));
+      }
+
       await deleteDoc(postDoc);
+
+      await this.imageService.deleteImage(post.data.imageName);
 
       return successResponse();
     } catch (error) {
@@ -96,4 +123,4 @@ class PostRepository implements IPostRepository {
   }
 }
 
-export const postRepository = new PostRepository();
+export const postRepository = (imageService: IImageService) => new PostRepository(imageService);

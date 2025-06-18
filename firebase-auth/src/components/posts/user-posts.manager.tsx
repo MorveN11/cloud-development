@@ -1,11 +1,11 @@
 import { CreatePostDialog } from '@/components/posts/create-post.dialog';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { LoadingButton } from '@/components/ui/loading-button';
 import { LoadingState } from '@/components/ui/loading-state';
 import { useUserPosts } from '@/hooks/post/use-user-posts.hook';
 import type { UserProfile } from '@/types/user.types';
 
-import { MessageSquare, Trash2 } from 'lucide-react';
+import { Calendar, ImageIcon, MessageSquare, Trash2 } from 'lucide-react';
 
 interface Props {
   user: UserProfile;
@@ -25,9 +25,9 @@ export function UserPostsManager({ user }: Props) {
           <div>
             <CardTitle className="flex items-center gap-2">
               <MessageSquare className="h-5 w-5" />
-              Your Posts
+              Mis Posts
             </CardTitle>
-            <CardDescription>Manage your posts and content</CardDescription>
+            <CardDescription>Gestiona tu contenido y publicaciones</CardDescription>
           </div>
           <CreatePostDialog onPostCreated={handleCreatePost} />
         </div>
@@ -35,40 +35,114 @@ export function UserPostsManager({ user }: Props) {
 
       <CardContent className="space-y-4">
         {posts.length === 0 ? (
-          <div className="flex h-32 items-center justify-center rounded-lg border-2 border-dashed border-gray-300">
+          <div className="flex h-40 items-center justify-center rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600">
             <div className="text-center">
-              <MessageSquare className="mx-auto h-8 w-8 text-gray-400" />
-              <p className="mt-2 text-sm text-gray-500">No posts yet</p>
-              <p className="text-xs text-gray-400">Create your first post to get started</p>
+              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800">
+                <MessageSquare className="h-8 w-8 text-gray-400" />
+              </div>
+              <h3 className="mb-2 text-lg font-medium text-gray-900 dark:text-white">No hay posts aún</h3>
+              <p className="mb-4 text-sm text-gray-500 dark:text-gray-400">
+                Crea tu primer post para comenzar a compartir contenido
+              </p>
+              <div className="text-xs text-gray-400 dark:text-gray-500">
+                Puedes agregar texto e imágenes a tus posts
+              </div>
             </div>
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-6">
             {posts.map((post) => (
-              <Card key={post.id} className="relative">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-lg">{post.title}</CardTitle>
-                  <CardDescription className="text-xs">
-                    {post.createdAt.toLocaleDateString()} at {post.createdAt.toLocaleTimeString()}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm whitespace-pre-wrap text-gray-700">{post.content}</p>
-                </CardContent>
-                <CardFooter className="pt-3">
-                  <div className="flex w-full justify-end">
+              <Card key={post.id} className="overflow-hidden transition-shadow hover:shadow-md">
+                {/* Imagen del post si existe */}
+                {post.imageUrl && (
+                  <div className="relative aspect-video w-full overflow-hidden bg-gray-100">
+                    <img
+                      src={post.imageUrl}
+                      alt={post.title}
+                      className="h-full w-full object-cover transition-transform hover:scale-105"
+                      onError={(e) => {
+                        // Fallback si la imagen no carga
+                        const target = e.target as HTMLImageElement;
+                        target.style.display = 'none';
+                        const parent = target.parentElement;
+                        if (parent) {
+                          parent.innerHTML = `
+                            <div class="flex h-full items-center justify-center bg-gray-100 dark:bg-gray-800">
+                              <div class="text-center">
+                                <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                </svg>
+                                <p class="mt-2 text-sm text-gray-500">Imagen no disponible</p>
+                              </div>
+                            </div>
+                          `;
+                        }
+                      }}
+                    />
+                  </div>
+                )}
+
+                <div className="p-6">
+                  {/* Header del post */}
+                  <div className="mb-4">
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <h3 className="text-xl font-semibold text-gray-900 dark:text-white">{post.title}</h3>
+                        <div className="mt-2 flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+                          <Calendar className="h-4 w-4" />
+                          <span>
+                            {post.createdAt.toLocaleDateString('es-ES', {
+                              year: 'numeric',
+                              month: 'long',
+                              day: 'numeric',
+                            })}{' '}
+                            a las{' '}
+                            {post.createdAt.toLocaleTimeString('es-ES', {
+                              hour: '2-digit',
+                              minute: '2-digit',
+                            })}
+                          </span>
+                          {post.imageUrl && (
+                            <>
+                              <span className="text-gray-300">•</span>
+                              <ImageIcon className="h-4 w-4" />
+                              <span>Con imagen</span>
+                            </>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Contenido del post */}
+                  <div className="mb-6">
+                    <p className="leading-relaxed whitespace-pre-wrap text-gray-700 dark:text-gray-300">
+                      {post.content}
+                    </p>
+                  </div>
+
+                  {/* Footer con acciones */}
+                  <div className="flex items-center justify-between border-t pt-4">
+                    <div className="flex items-center gap-4 text-sm text-gray-500">
+                      <span className="flex items-center gap-1">
+                        <MessageSquare className="h-4 w-4" />
+                        Post
+                      </span>
+                    </div>
+
                     <LoadingButton
-                      variant="destructive"
+                      variant="outline"
                       size="sm"
                       onClick={() => handleDeletePost(post.id)}
                       loading={deleting === post.id}
-                      loadingText="Deleting..."
+                      loadingText="Eliminando..."
+                      className="text-red-600 hover:bg-red-50 hover:text-red-700 dark:text-red-400 dark:hover:bg-red-950/20"
                     >
                       <Trash2 className="h-4 w-4" />
-                      Delete
+                      Eliminar
                     </LoadingButton>
                   </div>
-                </CardFooter>
+                </div>
               </Card>
             ))}
           </div>

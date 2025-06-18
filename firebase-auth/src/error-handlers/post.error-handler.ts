@@ -10,6 +10,7 @@ export const PostErrorCode = {
   VALIDATION_ERROR: 'post/validation-error',
   DOCUMENT_PARSE_ERROR: 'post/document-parse-error',
   UNAUTHORIZED_ACCESS: 'post/unauthorized-access',
+  IMAGE_UPLOAD_FAILED: 'post/image-upload-failed',
 } as const;
 
 export type PostErrorCode = (typeof PostErrorCode)[keyof typeof PostErrorCode];
@@ -26,6 +27,7 @@ const errorMessages: Record<PostErrorCode, string> = {
   [PostErrorCode.VALIDATION_ERROR]: 'Please check your post information and try again.',
   [PostErrorCode.DOCUMENT_PARSE_ERROR]: 'Failed to process post data. Please try again.',
   [PostErrorCode.UNAUTHORIZED_ACCESS]: 'You are not authorized to access this post.',
+  [PostErrorCode.IMAGE_UPLOAD_FAILED]: 'Failed to upload image for the post. Please try again.',
 };
 
 export interface PostError extends Error {
