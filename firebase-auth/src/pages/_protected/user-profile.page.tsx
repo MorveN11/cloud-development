@@ -1,4 +1,5 @@
 import { ProviderIcon } from '@/components/auth/provider-icon';
+import { UserPostsManager } from '@/components/posts/user-posts.manager';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { CenteredContainer } from '@/components/ui/centered-container';
@@ -56,7 +57,7 @@ export function UserProfilePage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50">
+    <div className="pt-24 pb-12">
       <div className="custom-container">
         <div className="mb-4">
           <div className="flex items-center justify-between">
@@ -82,29 +83,25 @@ export function UserProfilePage() {
                 <div className="space-y-4">
                   <div className="flex items-center space-x-3 text-gray-600">
                     <MapPin className="h-4 w-4" />
-                    <span className="text-sm">{userProfile.address || 'No address provided'}</span>
+                    <span className="text-sm">{userProfile.address}</span>
                   </div>
                   <div className="flex items-center space-x-3 text-gray-600">
                     <CalendarDays className="h-4 w-4" />
                     <span className="text-sm">
-                      {userProfile.birthDate
-                        ? new Date(userProfile.birthDate).toLocaleDateString('en-US', {
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric',
-                          })
-                        : 'No birth date provided'}
+                      {new Date(userProfile.birthDate).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                      })}
                     </span>
                   </div>
                   <div className="border-t pt-4">
                     <p className="text-xs text-gray-500">
                       Member since{' '}
-                      {userProfile.createdAt
-                        ? new Date(userProfile.createdAt).toLocaleDateString('en-US', {
-                            year: 'numeric',
-                            month: 'long',
-                          })
-                        : 'Unknown'}
+                      {new Date(userProfile.createdAt).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                      })}
                     </p>
                   </div>
                 </div>
@@ -185,22 +182,20 @@ export function UserProfilePage() {
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-gray-700">Display Name</label>
                     <div className="rounded-md border bg-gray-50 p-3">
-                      <span className="text-sm text-gray-900">{userProfile.displayName || 'Not set'}</span>
+                      <span className="text-sm text-gray-900">{userProfile.displayName}</span>
                     </div>
                   </div>
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-gray-700">Last Updated</label>
                     <div className="rounded-md border bg-gray-50 p-3">
                       <span className="text-sm text-gray-900">
-                        {userProfile.updatedAt
-                          ? new Date(userProfile.updatedAt).toLocaleDateString('en-US', {
-                              year: 'numeric',
-                              month: 'short',
-                              day: 'numeric',
-                              hour: '2-digit',
-                              minute: '2-digit',
-                            })
-                          : 'Never'}
+                        {new Date(userProfile.updatedAt).toLocaleDateString('en-US', {
+                          year: 'numeric',
+                          month: 'short',
+                          day: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit',
+                        })}
                       </span>
                     </div>
                   </div>
@@ -208,20 +203,9 @@ export function UserProfilePage() {
               </CardContent>
             </Card>
 
-            <Card className="mt-6">
-              <CardHeader>
-                <CardTitle>Your Posts</CardTitle>
-                <CardDescription>Manage your posts and content</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="flex h-32 items-center justify-center rounded-lg border-2 border-dashed border-gray-300">
-                  <div className="text-center">
-                    <p className="text-sm text-gray-500">No posts yet</p>
-                    <p className="text-xs text-gray-400">This feature will be available soon</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+            <div className="mt-6">
+              <UserPostsManager user={userProfile} />
+            </div>
           </div>
         </div>
       </div>
