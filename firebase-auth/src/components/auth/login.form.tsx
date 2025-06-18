@@ -1,6 +1,6 @@
-import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { LoadingButton } from '@/components/ui/loading-button';
 import { Password } from '@/components/ui/password';
 import { useAuthActions } from '@/hooks/auth/use-auth-actions.hook';
 import { loginFormSchema } from '@/schemas/auth.schemas';
@@ -8,7 +8,6 @@ import type { LoginFormValues } from '@/types/auth.types';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { Loader2 } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 
 export function LoginForm() {
@@ -57,10 +56,14 @@ export function LoginForm() {
           )}
         />
 
-        <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
-          {form.formState.isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+        <LoadingButton
+          type="submit"
+          className="w-full"
+          loading={form.formState.isSubmitting}
+          loadingText="Signing in..."
+        >
           Login
-        </Button>
+        </LoadingButton>
       </form>
     </Form>
   );

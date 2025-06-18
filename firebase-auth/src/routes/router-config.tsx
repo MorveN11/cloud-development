@@ -5,8 +5,11 @@ import { RootLayout } from '@/layouts/root-layout';
 import { LoginPage } from '@/pages/_auth/login.page';
 import { RegisterPage } from '@/pages/_auth/register.page';
 import { Error404Page } from '@/pages/_error/404.page';
+import { CompleteRegistrationPage } from '@/pages/_protected/complete-registration.page';
 import { DashboardPage } from '@/pages/_protected/dashboard.page';
+import { EditProfilePage } from '@/pages/_protected/edit-profile.page';
 import { LinkPasswordPage } from '@/pages/_protected/link-password.page';
+import { UserProfilePage } from '@/pages/_protected/user-profile.page';
 import { HomePage } from '@/pages/_public/home.page';
 
 import { Route, Routes } from 'react-router';
@@ -24,6 +27,9 @@ export function RouterConfig() {
         </Route>
         <Route element={<ProtectedLayout />}>
           <Route path="dashboard" element={<DashboardPage />} />
+          <Route path="complete-registration" element={<CompleteRegistrationPage />} />
+          <Route path="user-profile" element={<UserProfilePage />} />
+          <Route path="edit-profile" element={<EditProfilePage />} />
           <Route path="link-password" element={<LinkPasswordPage />} />
         </Route>
         <Route path="*" element={<Error404Page />} />

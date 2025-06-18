@@ -1,6 +1,6 @@
-import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { LoadingButton } from '@/components/ui/loading-button';
 import { Password } from '@/components/ui/password';
 import { useAuth } from '@/contexts/auth.context';
 import { useAuthActions } from '@/hooks/auth/use-auth-actions.hook';
@@ -9,7 +9,6 @@ import type { LinkPasswordFormValues } from '@/types/auth.types';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { Loader2 } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 
 export function LinkPasswordForm() {
@@ -19,7 +18,7 @@ export function LinkPasswordForm() {
   const form = useForm<LinkPasswordFormValues>({
     resolver: zodResolver(linkPasswordFormSchema),
     defaultValues: {
-      email: user.email || '',
+      email: user.email,
       password: '',
     },
   });
@@ -66,10 +65,9 @@ export function LinkPasswordForm() {
           )}
         />
 
-        <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
-          {form.formState.isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+        <LoadingButton type="submit" className="w-full" loading={form.formState.isSubmitting} loadingText="Linking...">
           Link
-        </Button>
+        </LoadingButton>
       </form>
     </Form>
   );

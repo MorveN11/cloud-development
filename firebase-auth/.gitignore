@@ -14,3 +14,6 @@ dist-ssr
 # Environment Variables
 .env*
 !.env.example
+
+# ESLint
+.eslintcache

@@ -1,20 +1,15 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 
+import type { IAuthService } from '@/interfaces/auth/auth-service.interface';
 import type { AuthProviderType } from '@/providers/auth.providers';
-import type { IAuthService } from '@/services/auth.service';
-import type { ApiResponse } from '@/types/api.types';
 import type { User } from '@/types/auth.types';
 
 interface AuthContextType {
   user: User;
   loading: boolean;
   isAuthenticated: boolean;
-  register: (email: string, password: string, displayName: string) => Promise<ApiResponse<User>>;
-  login: (email: string, password: string) => Promise<ApiResponse<User>>;
-  loginWithProvider: (providerId: AuthProviderType) => Promise<ApiResponse<User>>;
-  logout: () => Promise<ApiResponse>;
-  linkWithProvider: (providerId: AuthProviderType) => Promise<ApiResponse<User>>;
-  linkWithPassword: (email: string, password: string) => Promise<ApiResponse<User>>;
+  authService: IAuthService;
+  refreshUser: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -33,14 +28,43 @@ export function AuthProvider({ authService, children }: { authService: IAuthServ
   const [user, setUser] = useState<User>({} as User);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const unsubscribe = authService.onAuthStateChanged((currentUser) => {
-      setUser(currentUser || ({} as User));
+  const updateUserState = useCallback(
+    (
+      currentUser: {
+        uid: string;
+        email: string | null;
+        displayName: string | null;
+        providerData: { providerId: string }[];
+      } | null,
+    ) => {
+      if (currentUser) {
+        setUser({
+          uid: currentUser.uid,
+          email: currentUser.email || '',
+          displayName: currentUser.displayName || '',
+          providerData: currentUser.providerData.map((provider) => ({
+            providerId: provider.providerId as AuthProviderType,
+          })),
+        });
+      } else {
+        setUser({} as User);
+      }
       setLoading(false);
-    });
+    },
+    [],
+  );
 
+  const refreshUser = useCallback(async () => {
+    const unsubscribe = authService.onAuthStateChanged((currentUser) => {
+      updateUserState(currentUser);
+      unsubscribe();
+    });
+  }, [authService, updateUserState]);
+
+  useEffect(() => {
+    const unsubscribe = authService.onAuthStateChanged(updateUserState);
     return () => unsubscribe();
-  }, [authService]);
+  }, [authService, updateUserState]);
 
   return (
     <AuthContext.Provider
@@ -48,12 +72,8 @@ export function AuthProvider({ authService, children }: { authService: IAuthServ
         user,
         loading,
         isAuthenticated: !!user.uid,
-        register: authService.register,
-        login: authService.login,
-        loginWithProvider: authService.loginWithProvider,
-        logout: authService.logout,
-        linkWithProvider: authService.linkWithProvider,
-        linkWithPassword: authService.linkWithPassword,
+        authService,
+        refreshUser,
       }}
     >
       {children}

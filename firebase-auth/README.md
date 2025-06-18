@@ -83,3 +83,62 @@ Lunes 09 de junio de 2025
 - Asegúrate de configurar correctamente las reglas de seguridad de Firebase
 - No olvides configurar las URLs de redirección en la consola de Firebase
 - Mantén tus credenciales de Firebase seguras y no las expongas en el código fuente
+
+## Historial de Versiones
+
+### Versión 2.0 - 13 de Junio de 2025
+
+#### 🚀 Nuevas Funcionalidades
+
+##### Gestión de Perfiles de Usuario
+
+- Sistema completo de perfiles de usuario con integración a Firestore
+- Formularios para crear y editar perfiles de usuario con validación completa
+- Página de visualización de perfil con información detallada del usuario
+- Flujo de completar registro para nuevos usuarios autenticados
+- Repositorio de usuarios con operaciones CRUD (crear, leer, actualizar, eliminar)
+
+##### Componentes de UI Ampliados
+
+- 15+ nuevos componentes de interfaz reutilizables (Accordion, Alert Dialog, Avatar, Calendar, Carousel, etc.)
+- Componentes especializados para estados de carga y error
+- Botones de carga inteligentes para mejor experiencia de usuario
+- Contenedores centrados y componentes de navegación mejorados
+
+#### 🔧 Mejoras Técnicas
+
+##### Arquitectura y Organización
+
+- Nueva capa de repositorios para abstracción de datos de Firestore
+- Contexto de repositorios para inyección de dependencias
+- Interfaces TypeScript para acciones de usuario y servicios de autenticación
+- Hooks personalizados para gestión de perfiles y acciones de usuario
+- Manejo de errores mejorado con handlers específicos por dominio
+
+##### Herramientas de Desarrollo
+
+- Configuración actualizada de ESLint con reglas modernas
+- Integración de Prettier para formateo consistente de código
+- Archivo `.editorconfig` para normalización entre editores
+- Configuración mejorada de Vite para mejor compatibilidad
+
+##### Validación y Tipos
+
+- Esquemas Zod ampliados para validación de datos de usuario
+- Tipos TypeScript actualizados para soporte de perfiles extendidos
+- Validación de campos de dirección y fecha de nacimiento
+
+#### 📝 Páginas y Rutas Nuevas
+
+- `/complete-registration` - Completar información de perfil después del registro
+- `/profile` - Visualizar perfil de usuario actual
+- `/profile/edit` - Editar información de perfil
+
+#### 🎨 Experiencia de Usuario
+
+- Estados de carga consistentes en toda la aplicación
+- Manejo mejorado de errores con mensajes informativos
+- Formularios reactivos con validación en tiempo real
+- Iconos de proveedores de autenticación mejorados
+
+Esta actualización transforma la aplicación de un sistema básico de autenticación a una plataforma completa de gestión de usuarios con perfiles detallados y una arquitectura escalable.

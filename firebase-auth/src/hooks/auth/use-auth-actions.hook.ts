@@ -1,110 +1,108 @@
+import { startTransition } from 'react';
+
 import { useAuth } from '@/contexts/auth.context';
+import type { IAuthActions } from '@/interfaces/auth/auth-actions.interface';
+import { handleAuthAsyncAction } from '@/lib/action.utils';
 import type { AuthProviderType } from '@/providers/auth.providers';
 import type { LinkPasswordFormValues, LoginFormValues, RegisterFormValues } from '@/types/auth.types';
 
 import { useNavigate } from 'react-router';
-import { toast } from 'sonner';
 
-export const useAuthActions = () => {
+export const useAuthActions = (): IAuthActions => {
   const navigate = useNavigate();
 
-  const { loginWithProvider, login, linkWithProvider, linkWithPassword, register } = useAuth();
+  const { authService, refreshUser } = useAuth();
 
-  const handleLogin = async (data: LoginFormValues) => {
-    const response = await login(data.email, data.password);
-
-    if (!response.success) {
-      toast.error(response.error);
-
-      return;
-    }
-
-    toast.success('Login successful');
-
-    navigate('/dashboard');
+  const handleLogin = async (data: LoginFormValues): Promise<void> => {
+    await handleAuthAsyncAction(
+      () => authService.login(data.email, data.password),
+      'Login successful',
+      true,
+      () => {
+        startTransition(() => {
+          navigate('/dashboard');
+        });
+      },
+    );
   };
 
-  const handleLoginWithProvider = async (providerId: AuthProviderType) => {
+  const handleLoginWithProvider = async (providerId: AuthProviderType): Promise<void> => {
     if (providerId === 'password') {
-      navigate('/link-password');
-
+      startTransition(() => {
+        navigate('/link-password');
+      });
       return;
     }
 
-    const response = await loginWithProvider(providerId);
-
-    if (!response.success) {
-      toast.error(response.error);
-
-      return;
-    }
-
-    toast.success('Login successful');
-
-    navigate('/dashboard');
-  };
-  const { logout } = useAuth();
-
-  const handleLogout = async () => {
-    const response = await logout();
-
-    if (!response.success) {
-      toast.error(response.error);
-
-      return;
-    }
-
-    toast.success('Logout successful');
-
-    navigate('/');
+    await handleAuthAsyncAction(
+      () => authService.loginWithProvider(providerId),
+      'Login successful',
+      true,
+      () => {
+        startTransition(() => {
+          navigate('/dashboard');
+        });
+      },
+    );
   };
 
-  const handleLinkWithProvider = async (providerId: AuthProviderType) => {
+  const handleLogout = async (): Promise<void> => {
+    await handleAuthAsyncAction(
+      () => authService.logout(),
+      'Logout successful',
+      true,
+      () => {
+        startTransition(() => {
+          navigate('/');
+        });
+      },
+    );
+  };
+
+  const handleLinkWithProvider = async (providerId: AuthProviderType): Promise<void> => {
     if (providerId === 'password') {
-      navigate('/link-password');
-
+      startTransition(() => {
+        navigate('/link-password');
+      });
       return;
     }
 
-    const response = await linkWithProvider(providerId);
-
-    if (!response.success) {
-      toast.error(response.error);
-
-      return;
-    }
-
-    toast.success('Link successful');
-
-    navigate('/dashboard');
+    await handleAuthAsyncAction(
+      () => authService.linkWithProvider(providerId),
+      'Account linked successfully',
+      true,
+      async () => {
+        await refreshUser();
+      },
+    );
   };
 
-  const handleLinkWithPassword = async (data: LinkPasswordFormValues) => {
-    const response = await linkWithPassword(data.email, data.password);
-
-    if (!response.success) {
-      toast.error(response.error);
-
-      return;
-    }
-
-    toast.success('Link successful');
-
-    navigate('/dashboard');
+  const handleLinkWithPassword = async (data: LinkPasswordFormValues): Promise<void> => {
+    await handleAuthAsyncAction(
+      () => authService.linkWithPassword(data.email, data.password),
+      'Password linked successfully',
+      true,
+      () => {
+        startTransition(async () => {
+          await refreshUser();
+          navigate('/dashboard');
+        });
+      },
+    );
   };
 
-  const handleRegister = async (data: RegisterFormValues) => {
-    const response = await register(data.email, data.password, data.displayName);
-
-    if (!response.success) {
-      toast.error(response.error);
-
-      return;
-    }
-
-    toast.success('Register successful');
-
-    navigate('/dashboard');
+  const handleRegister = async (data: RegisterFormValues): Promise<void> => {
+    await handleAuthAsyncAction(
+      () => authService.register(data.email, data.password, data.displayName),
+      'Registration successful',
+      true,
+      async () => {
+        startTransition(async () => {
+          await refreshUser();
+          navigate('/dashboard');
+        });
+      },
+    );
   };
 
   return {
