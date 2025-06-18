@@ -72,6 +72,8 @@ export function CreatePostDialog({ onPostCreated }: CreatePostDialogProps) {
     } catch (error) {
       console.error('Error creating post:', error);
     } finally {
+      setImagePreview(null);
+      setIsDragOver(false);
       setIsSubmitting(false);
     }
   };
@@ -231,7 +233,6 @@ export function CreatePostDialog({ onPostCreated }: CreatePostDialogProps) {
                         <FormLabel className="text-sm font-medium">Imagen del Post</FormLabel>
                         <FormControl>
                           <div className="space-y-4">
-                            {/* Área de drag & drop mejorada */}
                             <div
                               className={`group relative flex min-h-40 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed px-6 py-8 text-center transition-all duration-200 ${
                                 isDragOver
@@ -295,7 +296,6 @@ export function CreatePostDialog({ onPostCreated }: CreatePostDialogProps) {
                               )}
                             </div>
 
-                            {/* Preview mejorado */}
                             {imagePreview && (
                               <div className="overflow-hidden rounded-lg border bg-white shadow-sm dark:bg-gray-800">
                                 <div className="flex items-center justify-between bg-gray-50 px-4 py-2 dark:bg-gray-700">

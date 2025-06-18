@@ -35,38 +35,31 @@ export function UserPostsManager({ user }: Props) {
 
       <CardContent className="space-y-4">
         {posts.length === 0 ? (
-          <div className="flex h-40 items-center justify-center rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600">
-            <div className="text-center">
-              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800">
-                <MessageSquare className="h-8 w-8 text-gray-400" />
-              </div>
-              <h3 className="mb-2 text-lg font-medium text-gray-900 dark:text-white">No hay posts aún</h3>
-              <p className="mb-4 text-sm text-gray-500 dark:text-gray-400">
-                Crea tu primer post para comenzar a compartir contenido
-              </p>
-              <div className="text-xs text-gray-400 dark:text-gray-500">
-                Puedes agregar texto e imágenes a tus posts
-              </div>
+          <div className="flex h-40 flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-gray-300 py-8 dark:border-gray-600">
+            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800">
+              <MessageSquare className="h-8 w-8 text-gray-400" />
             </div>
+            <h3 className="text-lg font-medium text-gray-900 dark:text-white">No hay posts aún</h3>
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              Crea tu primer post para comenzar a compartir contenido
+            </p>
+            <div className="text-xs text-gray-400 dark:text-gray-500">Puedes agregar texto e imágenes a tus posts</div>
           </div>
         ) : (
           <div className="space-y-6">
             {posts.map((post) => (
               <Card key={post.id} className="overflow-hidden transition-shadow hover:shadow-md">
-                {/* Imagen del post si existe */}
-                {post.imageUrl && (
-                  <div className="relative aspect-video w-full overflow-hidden bg-gray-100">
-                    <img
-                      src={post.imageUrl}
-                      alt={post.title}
-                      className="h-full w-full object-cover transition-transform hover:scale-105"
-                      onError={(e) => {
-                        // Fallback si la imagen no carga
-                        const target = e.target as HTMLImageElement;
-                        target.style.display = 'none';
-                        const parent = target.parentElement;
-                        if (parent) {
-                          parent.innerHTML = `
+                <div className="relative aspect-video w-full overflow-hidden bg-gray-100">
+                  <img
+                    src={post.imageUrl}
+                    alt={post.title}
+                    className="h-full w-full object-cover transition-transform hover:scale-105"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.style.display = 'none';
+                      const parent = target.parentElement;
+                      if (parent) {
+                        parent.innerHTML = `
                             <div class="flex h-full items-center justify-center bg-gray-100 dark:bg-gray-800">
                               <div class="text-center">
                                 <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -76,14 +69,12 @@ export function UserPostsManager({ user }: Props) {
                               </div>
                             </div>
                           `;
-                        }
-                      }}
-                    />
-                  </div>
-                )}
+                      }
+                    }}
+                  />
+                </div>
 
                 <div className="p-6">
-                  {/* Header del post */}
                   <div className="mb-4">
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
@@ -114,14 +105,12 @@ export function UserPostsManager({ user }: Props) {
                     </div>
                   </div>
 
-                  {/* Contenido del post */}
                   <div className="mb-6">
                     <p className="leading-relaxed whitespace-pre-wrap text-gray-700 dark:text-gray-300">
                       {post.content}
                     </p>
                   </div>
 
-                  {/* Footer con acciones */}
                   <div className="flex items-center justify-between border-t pt-4">
                     <div className="flex items-center gap-4 text-sm text-gray-500">
                       <span className="flex items-center gap-1">
