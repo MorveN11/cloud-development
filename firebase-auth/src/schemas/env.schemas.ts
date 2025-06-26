@@ -10,4 +10,5 @@ export const envSchema = z.object({
   VITE_FIREBASE_APP_ID: z.string().min(1, 'El ID de la aplicación de Firebase es requerido'),
   VITE_FIREBASE_MEASUREMENT_ID: z.string().min(1, 'El ID de medición de Firebase es requerido'),
   VITE_FIREBASE_VAPID_KEY: z.string().min(1, 'La clave VAPID de Firebase es requerida'),
+  VITE_GEMINI_API_KEY: z.string().min(1, 'La clave API de Gemini es requerida'),
 });

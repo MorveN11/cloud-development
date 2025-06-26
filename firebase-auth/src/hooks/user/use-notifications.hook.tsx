@@ -22,8 +22,6 @@ export const useNotifications = () => {
         });
 
         if (currentToken) {
-          console.warn('Firebase token obtained:', currentToken);
-
           setToken(currentToken);
         } else {
           console.warn('No registration token available. Request permission to generate one.');

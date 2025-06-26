@@ -1,5 +1,6 @@
 import { db } from '@/apps/firebase.app';
 import { CustomPostError, PostErrorCode, handlePostError } from '@/error-handlers/post.error-handler';
+import type { IContentModerationService } from '@/interfaces/content-moderation/content-moderation.service';
 import type { IImageService } from '@/interfaces/image/image-service.interface';
 import type { IPostRepository } from '@/interfaces/post/post-repository.interface';
 import { postSchema } from '@/schemas/post.schemas';
@@ -24,9 +25,11 @@ class PostRepository implements IPostRepository {
   private readonly collectionName = 'posts';
   private readonly postsCollection = collection(db, this.collectionName);
   private readonly imageService: IImageService;
+  private readonly contentModerationService: IContentModerationService;
 
-  constructor(imageService: IImageService) {
+  constructor(imageService: IImageService, contentModerationService: IContentModerationService) {
     this.imageService = imageService;
+    this.contentModerationService = contentModerationService;
   }
 
   public async create(
@@ -46,8 +49,8 @@ class PostRepository implements IPostRepository {
 
       const postToCreate = postSchema.safeParse({
         id: postDoc.id,
-        title: postData.title,
-        content: postData.content,
+        title: await this.contentModerationService.moderateContent(postData.title),
+        content: await this.contentModerationService.moderateContent(postData.content),
         imageName: imageUploadResult.data.name,
         imageUrl: imageUploadResult.data.url,
         authorDisplayName,
@@ -131,4 +134,5 @@ class PostRepository implements IPostRepository {
   }
 }
 
-export const postRepository = (imageService: IImageService) => new PostRepository(imageService);
+export const postRepository = (imageService: IImageService, contentModerationService: IContentModerationService) =>
+  new PostRepository(imageService, contentModerationService);
