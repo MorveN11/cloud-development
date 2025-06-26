@@ -1,0 +1,22 @@
+# Logs
+pnpm-debug.log*
+
+# Output
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor
+.vscode
+.idea
+
+# Environment Variables
+.env*
+!.env.example
+
+# ESLint
+.eslintcache
+
+# FCM (this file is only used for dev mode purposes)
+public/firebase-messaging-sw.js
