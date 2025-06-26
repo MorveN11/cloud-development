@@ -1,7 +1,7 @@
-import { Timestamp } from "firebase-admin/firestore";
-import { UserProfile, userProfileSchema } from "../schemas/user.schema";
+import { Timestamp } from 'firebase-admin/firestore';
+import { UserProfile, userProfileSchema } from '../schemas/user.schema';
 
-import * as logger from "firebase-functions/logger";
+import * as logger from 'firebase-functions/logger';
 
 /**
  * Repository class for managing user data operations in Firestore
@@ -10,7 +10,7 @@ export class UserRepository {
   /**
    * The Firestore collection name for users
    */
-  private readonly collectionName = "users";
+  private readonly collectionName = 'users';
 
   /**
    * Creates an instance of UserRepository
@@ -38,7 +38,7 @@ export class UserRepository {
       });
 
       if (!userProfile.success) {
-        logger.error("Invalid user profile data:", userProfile.error);
+        logger.error('Invalid user profile data:', userProfile.error);
 
         return null;
       }

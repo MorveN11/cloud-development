@@ -1,4 +1,4 @@
-import { Messaging } from "firebase-admin/messaging";
+import { Messaging } from 'firebase-admin/messaging';
 
 /**
  * Service for handling Firebase Cloud Messaging (FCM) notifications
@@ -19,7 +19,7 @@ export class NotificationService {
    */
   async sendNotification(title: string, body: string, tokens: string[]): Promise<void> {
     if (!tokens || tokens.length === 0) {
-      console.warn("No FCM tokens provided for notification");
+      console.warn('No FCM tokens provided for notification');
       return;
     }
 
@@ -38,9 +38,9 @@ export class NotificationService {
         .map((resp, index) => (resp.error ? tokens[index] : null))
         .filter((token) => token !== null);
 
-      console.error("Failed to send notifications to tokens:", failedTokens);
+      console.error('Failed to send notifications to tokens:', failedTokens);
     } else {
-      console.log("Notifications sent successfully to all tokens");
+      console.log('Notifications sent successfully to all tokens');
     }
   }
 }

@@ -33,10 +33,7 @@ export const useUserActions = () => {
 
   const updateNotificationToken = useCallback(
     async (uid: string, fcmToken: string): Promise<UserProfile | null> => {
-      return handleAsyncAction(
-        () => userRepository.updateNotificationToken(uid, fcmToken),
-        'Tokens actualizados correctamente',
-      );
+      return handleAsyncAction(() => userRepository.updateNotificationToken(uid, fcmToken));
     },
     [userRepository],
   );

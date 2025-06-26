@@ -1,14 +1,14 @@
-import { onDocumentCreated } from "firebase-functions/v2/firestore";
-import * as logger from "firebase-functions/logger";
-import * as admin from "firebase-admin";
-import { Post, postSchema } from "./schemas/post.schema";
-import { UserRepository } from "./repositories/user.repository";
-import { NotificationService } from "./services/notification.service";
-import { Timestamp } from "firebase-admin/firestore";
+import { onDocumentCreated } from 'firebase-functions/v2/firestore';
+import * as logger from 'firebase-functions/logger';
+import * as admin from 'firebase-admin';
+import { Post, postSchema } from './schemas/post.schema';
+import { UserRepository } from './repositories/user.repository';
+import { NotificationService } from './services/notification.service';
+import { Timestamp } from 'firebase-admin/firestore';
 
 admin.initializeApp();
 
-export const onPostCreated = onDocumentCreated("posts/{id}", async (event) => {
+export const onPostCreated = onDocumentCreated('posts/{id}', async (event) => {
   try {
     const userRepository = new UserRepository(admin.firestore());
 
@@ -17,7 +17,7 @@ export const onPostCreated = onDocumentCreated("posts/{id}", async (event) => {
     const postId = event.params.id;
 
     if (!event.data || !postId) {
-      logger.error("No post data found");
+      logger.error('No post data found');
       return;
     }
 
@@ -29,7 +29,7 @@ export const onPostCreated = onDocumentCreated("posts/{id}", async (event) => {
     });
 
     if (!post.success) {
-      logger.error("Invalid post data:", post.error);
+      logger.error('Invalid post data:', post.error);
       return;
     }
 
@@ -40,12 +40,12 @@ export const onPostCreated = onDocumentCreated("posts/{id}", async (event) => {
     const users = await userRepository.getAllUserProfiles();
 
     if (!users || users.length === 0) {
-      logger.info("No users found to notify");
+      logger.info('No users found to notify');
       return;
     }
 
     const message = {
-      title: "!Nuevo post disponible!",
+      title: '!Nuevo post disponible!',
       body: `Consulta el nuevo post: ${postData.title}`,
     };
 
@@ -53,7 +53,7 @@ export const onPostCreated = onDocumentCreated("posts/{id}", async (event) => {
 
     await notificationService.sendNotification(message.title, message.body, fcmTokens);
   } catch (error) {
-    logger.error("Error sending FCM notifications:", error);
+    logger.error('Error sending FCM notifications:', error);
     throw error;
   }
 });
