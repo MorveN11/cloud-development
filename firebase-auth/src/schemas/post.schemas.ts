@@ -43,6 +43,9 @@ export const postSchema = z.object({
   authorEmail: z.string().email({
     message: 'El correo del autor debe ser una dirección de correo válida',
   }),
+  likesCount: z.number().int().nonnegative({
+    message: 'El conteo de likes debe ser un número entero no negativo',
+  }),
   createdAt: z.date({
     message: 'La fecha de creación debe ser una fecha válida',
   }),
@@ -56,6 +59,7 @@ export const createPostDataSchema = postSchema
     authorUID: true,
     authorDisplayName: true,
     authorEmail: true,
+    likesCount: true,
     createdAt: true,
   })
   .extend({
@@ -70,3 +74,7 @@ export const createPostDataSchema = postSchema
         message: 'El tipo de archivo de imagen debe ser JPEG, PNG o WEBP',
       }),
   });
+
+export const postWithLikesSchema = postSchema.extend({
+  isLikedByUser: z.boolean(),
+});

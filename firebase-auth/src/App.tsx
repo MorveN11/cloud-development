@@ -1,5 +1,6 @@
 import { AuthProvider } from '@/contexts/auth.context';
 import { RepositoriesProvider } from '@/contexts/repositories.context';
+import { likeRepository } from '@/repositories/like.repository';
 import { postRepository } from '@/repositories/post.repository';
 import { userRepository } from '@/repositories/user.repository';
 import { RouterConfig } from '@/routes/router-config';
@@ -14,7 +15,8 @@ export function App() {
     <>
       <RepositoriesProvider
         userRepository={userRepository}
-        postRepository={postRepository(imageService, contentModerationService)}
+        postRepository={postRepository(imageService, contentModerationService, likeRepository)}
+        likeRepository={likeRepository}
       >
         <AuthProvider authService={authService(userRepository)}>
           <RouterConfig />

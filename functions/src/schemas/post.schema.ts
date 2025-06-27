@@ -43,9 +43,15 @@ export const postSchema = z.object({
   authorEmail: z.string().email({
     message: 'El correo del autor debe ser una dirección de correo válida',
   }),
+  likesCount: z
+    .number({
+      message: 'El conteo de "me gusta" es requerido',
+    })
+    .int()
+    .nonnegative({
+      message: 'El conteo de "me gusta" no puede ser negativo',
+    }),
   createdAt: z.date({
     message: 'La fecha de creación debe ser una fecha válida',
   }),
 });
-
-export type Post = z.infer<typeof postSchema>;

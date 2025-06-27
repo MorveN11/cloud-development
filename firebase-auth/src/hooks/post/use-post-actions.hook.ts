@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 
 import { useRepositories } from '@/contexts/repositories.context';
 import { handleAsyncAction } from '@/lib/action.utils';
-import type { CreatePostData, Post } from '@/types/post.types';
+import type { CreatePostData, Post, PostWithLikes } from '@/types/post.types';
 
 export const usePostActions = () => {
   const { postRepository } = useRepositories();
@@ -22,9 +22,22 @@ export const usePostActions = () => {
     [postRepository],
   );
 
-  const getUserPosts = useCallback(
+  const getPosts = useCallback(
     async (userId: string | undefined, showError: boolean = true): Promise<Post[]> => {
-      const result = await handleAsyncAction(() => postRepository.getUserPosts(userId), undefined, showError);
+      const result = await handleAsyncAction(() => postRepository.getPosts(userId), undefined, showError);
+
+      return Array.isArray(result) ? result : [];
+    },
+    [postRepository],
+  );
+
+  const getPostsWithLikes = useCallback(
+    async (userId?: string, authorUID?: string, showError: boolean = true): Promise<PostWithLikes[]> => {
+      const result = await handleAsyncAction(
+        () => postRepository.getPostsWithLikes(userId, authorUID),
+        undefined,
+        showError,
+      );
 
       return Array.isArray(result) ? result : [];
     },
@@ -45,7 +58,8 @@ export const usePostActions = () => {
 
   return {
     createPost,
-    getUserPosts,
+    getUserPosts: getPosts,
+    getPostsWithLikes,
     deletePost,
   };
 };

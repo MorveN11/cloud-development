@@ -1,14 +1,17 @@
+import { LikeButton } from '@/components/posts/like-button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import type { Post } from '@/types/post.types';
+import type { User } from '@/types/auth.types';
+import type { PostWithLikes } from '@/types/post.types';
 
 import { Calendar } from 'lucide-react';
 
 interface PostItemProps {
-  post: Post;
+  user: User;
+  post: PostWithLikes;
 }
 
-export function PostItem({ post }: PostItemProps) {
+export function PostItem({ user, post }: PostItemProps) {
   const formatTimeAgo = (date: Date) => {
     const now = new Date();
     const diffInHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60));
@@ -77,6 +80,12 @@ export function PostItem({ post }: PostItemProps) {
         </div>
 
         <div className="flex items-center justify-between border-t border-primary/10 pt-3">
+          <LikeButton
+            user={user}
+            post={post}
+            initialLikeState={post.isLikedByUser}
+            initialLikesCount={post.likesCount}
+          />
           <span className="text-xs text-muted-foreground">
             Publicado el{' '}
             {post.createdAt.toLocaleDateString('es-ES', {

@@ -34,5 +34,3 @@ export const userProfileSchema = z.object({
     message: 'La fecha de actualización debe ser una fecha válida',
   }),
 });
-
-export type UserProfile = z.infer<typeof userProfileSchema>;

@@ -46,7 +46,7 @@ export function MainFeed({ userProfile }: Props) {
             </CardContent>
           </Card>
         ) : (
-          posts.map((post) => <PostItem key={post.id} post={post} />)
+          posts.map((post) => <PostItem key={post.id} user={userProfile} post={post} />)
         )}
       </div>
     </div>

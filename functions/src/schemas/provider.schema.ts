@@ -6,5 +6,3 @@ export const providerSchema = z.object({
     message: `El ID del proveedor debe ser uno de: ${Object.keys(authProviders).join(', ')}`,
   }),
 });
-
-export type Provider = z.infer<typeof providerSchema>;

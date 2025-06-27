@@ -11,6 +11,7 @@ export const PostErrorCode = {
   DOCUMENT_PARSE_ERROR: 'post/document-parse-error',
   UNAUTHORIZED_ACCESS: 'post/unauthorized-access',
   IMAGE_UPLOAD_FAILED: 'post/image-upload-failed',
+  POSTS_NOT_FOUND: 'post/posts-not-found',
 } as const;
 
 export type PostErrorCode = (typeof PostErrorCode)[keyof typeof PostErrorCode];
@@ -28,6 +29,8 @@ const errorMessages: Record<PostErrorCode, string> = {
   [PostErrorCode.DOCUMENT_PARSE_ERROR]: 'Error al procesar los datos de la publicación. Intenta de nuevo.',
   [PostErrorCode.UNAUTHORIZED_ACCESS]: 'No tienes autorización para acceder a esta publicación.',
   [PostErrorCode.IMAGE_UPLOAD_FAILED]: 'Error al subir la imagen de la publicación. Intenta de nuevo.',
+  [PostErrorCode.POSTS_NOT_FOUND]:
+    'No se encontraron publicaciones. Puede que no existan o que no tengas acceso a ellas.',
 };
 
 export interface PostError extends Error {

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 
 import { usePostActions } from '@/hooks/post/use-post-actions.hook';
-import type { CreatePostData, Post } from '@/types/post.types';
+import type { CreatePostData, Post, PostWithLikes } from '@/types/post.types';
 import type { UserProfile } from '@/types/user.types';
 
 interface Props {
@@ -12,9 +12,9 @@ interface Props {
 }
 
 export const useUserPosts = ({ user, showError = true, autoLoad = true, allPosts = false }: Props) => {
-  const { getUserPosts, createPost, deletePost } = usePostActions();
+  const { getPostsWithLikes, createPost, deletePost } = usePostActions();
 
-  const [posts, setPosts] = useState<Post[]>([]);
+  const [posts, setPosts] = useState<PostWithLikes[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [creating, setCreating] = useState<boolean>(false);
@@ -27,7 +27,7 @@ export const useUserPosts = ({ user, showError = true, autoLoad = true, allPosts
 
       const userPostsId = allPosts ? undefined : user.uid;
 
-      const userPosts = await getUserPosts(userPostsId, showError);
+      const userPosts = await getPostsWithLikes(user.uid, userPostsId, showError);
       setPosts(userPosts);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Error al cargar las publicaciones del usuario';
@@ -36,7 +36,7 @@ export const useUserPosts = ({ user, showError = true, autoLoad = true, allPosts
     } finally {
       setLoading(false);
     }
-  }, [user.uid, showError, getUserPosts, allPosts]);
+  }, [user.uid, showError, getPostsWithLikes, allPosts]);
 
   const handleCreatePost = useCallback(
     async (postData: CreatePostData): Promise<Post | null> => {
@@ -47,7 +47,13 @@ export const useUserPosts = ({ user, showError = true, autoLoad = true, allPosts
         const newPost = await createPost(user.uid, user.displayName, user.email, postData);
 
         if (newPost) {
-          setPosts((prev) => [newPost, ...prev]);
+          setPosts((prev) => [
+            {
+              ...newPost,
+              isLikedByUser: false,
+            },
+            ...prev,
+          ]);
         }
 
         return newPost;

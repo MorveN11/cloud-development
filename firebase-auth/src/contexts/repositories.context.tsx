@@ -1,11 +1,13 @@
 import { createContext, useContext } from 'react';
 
+import type { ILikeRepository } from '@/interfaces/like/like-repository.interface';
 import type { IPostRepository } from '@/interfaces/post/post-repository.interface';
 import type { IUserRepository } from '@/interfaces/user/user-repository.interface';
 
 interface RepositoriesContextType {
   userRepository: IUserRepository;
   postRepository: IPostRepository;
+  likeRepository: ILikeRepository;
 }
 
 const RepositoriesContext = createContext<RepositoriesContextType | undefined>(undefined);
@@ -23,10 +25,12 @@ export function useRepositories() {
 export function RepositoriesProvider({
   userRepository,
   postRepository,
+  likeRepository,
   children,
 }: {
   userRepository: IUserRepository;
   postRepository: IPostRepository;
+  likeRepository: ILikeRepository;
   children: React.ReactNode;
 }) {
   return (
@@ -34,6 +38,7 @@ export function RepositoriesProvider({
       value={{
         userRepository,
         postRepository,
+        likeRepository,
       }}
     >
       {children}

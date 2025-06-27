@@ -1,4 +1,5 @@
 import { DeletePostDialog } from '@/components/posts/delete-post.dialog';
+import { LikeButton } from '@/components/posts/like-button';
 import { PostImage } from '@/components/posts/post-image';
 import { Card, CardContent } from '@/components/ui/card';
 import { LoadingButton } from '@/components/ui/loading-button';
@@ -88,6 +89,12 @@ export function UserProfilePosts({ user }: Props) {
               </div>
 
               <div className="flex items-center justify-between border-t border-primary/10 pt-4">
+                <LikeButton
+                  user={user}
+                  post={post}
+                  initialLikesCount={post.likesCount}
+                  initialLikeState={post.isLikedByUser}
+                />
                 <span className="text-sm text-muted-foreground">
                   Publicado el{' '}
                   {post.createdAt.toLocaleDateString('es-ES', {

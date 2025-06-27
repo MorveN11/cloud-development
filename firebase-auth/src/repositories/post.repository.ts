@@ -2,11 +2,12 @@ import { db } from '@/apps/firebase.app';
 import { CustomPostError, PostErrorCode, handlePostError } from '@/error-handlers/post.error-handler';
 import type { IContentModerationService } from '@/interfaces/content-moderation/content-moderation.service';
 import type { IImageService } from '@/interfaces/image/image-service.interface';
+import type { ILikeRepository } from '@/interfaces/like/like-repository.interface';
 import type { IPostRepository } from '@/interfaces/post/post-repository.interface';
 import { postSchema } from '@/schemas/post.schemas';
 import type { ApiResponse } from '@/types/api.types';
 import { errorResponse, successResponse } from '@/types/api.types';
-import type { CreatePostData, Post } from '@/types/post.types';
+import type { CreatePostData, Post, PostWithLikes } from '@/types/post.types';
 
 import {
   Timestamp,
@@ -26,10 +27,16 @@ class PostRepository implements IPostRepository {
   private readonly postsCollection = collection(db, this.collectionName);
   private readonly imageService: IImageService;
   private readonly contentModerationService: IContentModerationService;
+  private readonly likeRepository: ILikeRepository;
 
-  constructor(imageService: IImageService, contentModerationService: IContentModerationService) {
+  constructor(
+    imageService: IImageService,
+    contentModerationService: IContentModerationService,
+    likeRepository: ILikeRepository,
+  ) {
     this.imageService = imageService;
     this.contentModerationService = contentModerationService;
+    this.likeRepository = likeRepository;
   }
 
   public async create(
@@ -56,6 +63,7 @@ class PostRepository implements IPostRepository {
         authorDisplayName,
         authorUID,
         authorEmail,
+        likesCount: 0,
         createdAt: new Date(),
       });
 
@@ -71,7 +79,7 @@ class PostRepository implements IPostRepository {
     }
   }
 
-  public async getUserPosts(authorUID: string | undefined): Promise<ApiResponse<Post[]>> {
+  public async getPosts(authorUID?: string): Promise<ApiResponse<Post[]>> {
     try {
       const q = authorUID
         ? query(this.postsCollection, where('authorUID', '==', authorUID), orderBy('createdAt', 'desc'))
@@ -88,11 +96,11 @@ class PostRepository implements IPostRepository {
           createdAt: new Timestamp(data.createdAt.seconds, data.createdAt.nanoseconds).toDate(),
         });
 
-        if (post.success) {
-          posts.push(post.data);
-        } else {
-          return errorResponse(handlePostError(new CustomPostError(PostErrorCode.DOCUMENT_PARSE_ERROR)));
+        if (!post.success) {
+          throw new CustomPostError(PostErrorCode.DOCUMENT_PARSE_ERROR);
         }
+
+        posts.push(post.data);
       });
 
       return successResponse(posts);
@@ -132,7 +140,42 @@ class PostRepository implements IPostRepository {
       return errorResponse(handlePostError(error));
     }
   }
+
+  async getPostsWithLikes(userId?: string, authorUID?: string): Promise<ApiResponse<PostWithLikes[]>> {
+    try {
+      const posts = await this.getPosts(authorUID);
+
+      if (!posts.success) {
+        return errorResponse(handlePostError(new CustomPostError(PostErrorCode.POSTS_NOT_FOUND)));
+      }
+
+      let userLikedPosts: string[] = [];
+
+      if (userId) {
+        const likedPosts = await this.likeRepository.getUserLikes(userId);
+
+        if (!likedPosts.success) {
+          console.error('Error fetching user likes:', likedPosts.error);
+          return errorResponse(handlePostError(new CustomPostError(PostErrorCode.POSTS_NOT_FOUND)));
+        }
+
+        userLikedPosts = likedPosts.data.map((like) => like.postId);
+      }
+
+      const postsWithLikes: PostWithLikes[] = posts.data.map((post) => ({
+        ...post,
+        isLikedByUser: userId ? userLikedPosts.includes(post.id) : false,
+      }));
+
+      return successResponse(postsWithLikes);
+    } catch (error) {
+      return errorResponse(handlePostError(error));
+    }
+  }
 }
 
-export const postRepository = (imageService: IImageService, contentModerationService: IContentModerationService) =>
-  new PostRepository(imageService, contentModerationService);
+export const postRepository = (
+  imageService: IImageService,
+  contentModerationService: IContentModerationService,
+  likeRepository: ILikeRepository,
+) => new PostRepository(imageService, contentModerationService, likeRepository);
