@@ -20,9 +20,11 @@ export const usePostLikes = ({ user }: Props) => {
 
     const newLikeState = await toggleLikeAction(post.id);
 
-    toast.success(newLikeState ? `Te ha gustado la publicación` : `Has quitado tu me gusta de la publicación`, {
-      description: `La publicación ${post.title} ahora tiene ${newLikeState ? post.likesCount + 1 : post.likesCount - 1} me gusta`,
-    });
+    toast.success(
+      newLikeState
+        ? `Te ha gustado la publicación: ${post.title}`
+        : `Has quitado tu me gusta de la publicación: ${post.title}`,
+    );
 
     setIsLoading(false);
 
